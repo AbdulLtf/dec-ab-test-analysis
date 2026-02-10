@@ -1,82 +1,48 @@
-# A/B Test Analysis Project: From Raw Logs to Business Intelligence
+# A/B Test Analysis Project: From Data Verification to Business Strategy
 
 ## 🚀 Overview
-This project provides a professional-grade A/B testing analysis pipeline, transforming raw behavioral logs from five concurrent e-commerce experiments into actionable business strategies. The pipeline handles data purification, statistical validation, and automated reporting.
+This project is a professional-grade A/B testing suite designed to analyze behavioral data from five concurrent e-commerce experiments. It automates the transition from raw csv logs to a final business verdict, ensuring that every decision is backed by rigorous statistical validation.
 
 ---
 
-## 📊 The Unified Analysis Pipeline: Core Logic
-Modern e-commerce requires scaling experimentation. This codebase is designed to handle **five concurrent A/B tests** through a single, standardized function (`analyze_experiment`), ensuring consistency across:
-1.  **Menu Layout**: Horizontal vs. Vertical optimization.
-2.  **Novelty Slider**: Evaluating algorithmic vs. manual curation.
-3.  **Product Sliders**: Testing geometric vs. list layouts.
-4.  **Reviews**: Prominence of user feedback.
-5.  **Search Engine**: Tuning discovery algorithms.
-
-### Educational Data Flow
-The pipeline follows a strict sequence to ensure reliability:
-1.  **Data Purification**: 
-    - **Deduplication**: Removes redundant session logs (preventing artificial precision).
-    - **Outlier Control**: Uses Winsorization to mitigate "whales" that skew results.
-2.  **Validation Guardrails**: Confirms experimental integrity before testing.
-3.  **Statistical Inference**: Calculates p-values and confidence intervals.
-4.  **Automated Reporting**: Exports results to `experiment_summary.xlsx`.
+## 🏗️ Project Structure
+The repository is organized to maintain a clear separation between raw data, experimental logic, and business reporting:
+- `ab_test_analysis_v2.ipynb`: **The Analytical Engine**. A documentation-rich Jupyter Notebook that performs data loading, verification, and statistical testing.
+- `executive_summary.md`: **Stakeholder Brief**. A concise summary of winning/losing variants and recommended business actions.
+- `experiment_summary.xlsx`: **Automated Data Export**. The final results table, including conversion lifts and p-values, formatted for reporting.
+- `helper/`: Internal utility folder containing methodology definitions like `validation.py`.
+- `raw dataset/`: Source folder containing the 5 CSV files for the Menu, Novelty, Product, Reviews, and Search experiments.
 
 ---
 
-## 🔬 Statistical Methodology & Theory
-
-The project employs two primary statistical engines to evaluate performance at a **95% Confidence Level** ($\alpha = 0.05$).
-
-### 1. Conversion Rate (CR): Two-Proportion Z-Test
-**Theory**: The Conversion Rate is a **Bernoulli Trial** (purchase vs. no-purchase). For large sample sizes, the difference between two proportions follows a **Normal Distribution** based on the **Central Limit Theorem**.
--   **Why it's used**: It provides a robust framework to determine if a change in UI (like a new menu) significantly shifts user behavior.
--   **Formula Basis**: 
-    $$ Z = \frac{\hat{p}_1 - \hat{p}_2}{\sqrt{\hat{p}(1-\hat{p})(\frac{1}{n_1} + \frac{1}{n_2})}} $$
-
-### 2. Average Revenue (ARPU): Welch's T-Test
-**Theory**: Standard Student’s T-Tests assume equal variances between groups (Homoscedasticity). However, e-commerce revenue is typically skewed and volatile. 
--   **Why it's used**: **Welch's T-Test** (unpaired t-test with unequal variance) is used because it does not assume equal variances or equal sample sizes. This makes it significantly more accurate for financial data.
--   **Formula Basis**: 
-    $$ t = \frac{\bar{X}_1 - \bar{X}_2}{\sqrt{\frac{s_1^2}{n_1} + \frac{s_2^2}{n_2}}} $$
+## 🛠️ Tech Stack & Libraries
+The analysis is built on a robust Python data science stack:
+- **Python 3.13+**: The core language for processing.
+- **Pandas**: Used for high-performance data manipulation and cleaning.
+- **NumPy**: Powers the underlying mathematical and vector operations.
+- **SciPy (stats)**: The statistical engine used for T-Tests (Revenue) and Chi-Square tests (SRM).
+- **Statsmodels**: Handles Z-Tests for proportions and Multiple Testing Correction (Holm-Bonferroni).
+- **Matplotlib & Seaborn**: Generates professional-grade statistical visualizations.
+- **Openpyxl**: Manages the export to Excel workbooks.
 
 ---
 
-## 🛡️ Validation Framework: The Guardrail Suite
-
-Results are only valid if the underlying experiment is healthy. We use three specific "Guardrail" checks:
-
-### A. Sample Ratio Mismatch (SRM)
--   **Test**: Pearson's Chi-Square Test.
--   **Rationale**: Detects **assignment bias**. If we expect a 50/50 split but get 45/55, SRM indicates that the randomization engine failed or certain users (e.g., bots or power users) were systemically excluded from one group.
-
-### B. Covariate Balance
--   **Test**: Chi-Square (Categorical) / ANOVA (Continuous).
--   **Rationale**: Ensures that groups are **statistically identical** at baseline. It verifies that factors like Device Type, Browser, and Region are distributed equally so that any lift is caused solely by the experiment.
-
-### C. Temporal Stability
--   **Rationale**: Monitors the experiment's ratio day-by-day. It flags technical glitches (logging drops) or "Novelty Effects" where a short-term spike in interest fades quickly.
+## 🔬 How the Analysis Works (Simple View)
+Think of this pipeline as a digital "Scientific Lab":
+1.  **Incoming Data**: We load raw user behavior from various tests into the system.
+2.  **Health Check (Validation)**: Before trusting any result, we check if the test was "fair" (e.g., did 50% of people really go to the control group? Is the traffic steady?).
+3.  **The Comparison**: We compare the **Control** (Original version) against the **Treatment** (New version).
+4.  **Statistical Guardrails**: We look at "P-values". In simple terms, this tells us: *"Is this win real, or just a lucky coincidence?"*. We only declare a winner if the win is likely real.
+5.  **Final Report**: The system automatically types up a summary in Excel and identifies which experiments are **Winners**, which are **Losers**, and which need more time (**Inconclusive**).
 
 ---
 
-## 📂 Project Structure
-- `ab_test_analysis.ipynb`: The core analytical workhorse implementing the pipeline.
-- `executive_summary.md`: Strategic recommendations for stakeholders.
-- `experiment_summary.xlsx`: Automated data export with detailed metrics.
-- `raw dataset/`: Source CSV logs for all 5 experiments.
-
-## 🏁 Interpretation & Usage
-
-### Decision Matrix
-- **Winner = Treatment**: Statistically significant positive uplift (p < 0.05, Uplift > 0).
-- **Winner = Control**: Treatment performed significantly worse than baseline.
-- **Winner = Inconclusive**: No significant difference detected (Underpowered or Neutral).
-
-### How to Run
-1. Place CSV files in `raw dataset/`.
-2. Open `ab_test_analysis.ipynb` and **Run All Cells**.
-3. Inspect `experiment_summary.xlsx` for the final verdict.
+## 🏁 How to Use
+1.  Ensure all experiment data is saved in the `raw dataset/` folder.
+2.  Install required libraries: `pip install pandas numpy scipy statsmodels matplotlib seaborn openpyxl`.
+3.  Open `ab_test_analysis_v2.ipynb` in your favorite environment (Jupyter, VS Code) and select **Run All**.
+4.  Check `experiment_summary.xlsx` for the final verdict on all 5 tests.
 
 ---
-**Author**: Muhammad Abdul Lathief
-**Version**: 3.0 (Comprehensive Educational Merge)
+**Author**: Muhammad Abdul Lathief  
+**Version**: 4.0 (Enhanced Clarity & Stakeholder Documentation)
