@@ -1,6 +1,16 @@
+# Project notes
 plan.md
+
+# Temporary / helper folders
 helper/
 backup/
+
+# Python cache
 __pycache__/
-*.ipynb_checkpoints/
+*.py[cod]
+
+# Jupyter
+.ipynb_checkpoints/
+
+# Generated documents
 *.pdf
