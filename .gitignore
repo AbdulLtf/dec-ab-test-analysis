@@ -1,4 +1,6 @@
 plan.md
 helper/
+backup/
 __pycache__/
 *.ipynb_checkpoints/
+*.pdf
