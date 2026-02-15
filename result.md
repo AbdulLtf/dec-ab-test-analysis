@@ -134,7 +134,27 @@ The Mann-Whitney U test confirms that the decrease in ARPU is highly significant
 
 ---
 
-## 8. What the Data Shows (Insight Section)
+## 8. Experimental Outcomes (Cross-Test Summary)
+
+While the primary focus remains the **Menu Layout (Test 1)**, the broader experimentation cycle captured insights across five distinct tests. This provides a comparative baseline for optimization efforts.
+
+### Holistic Test Results
+| Experiment | Primary Metric | Result | Impact |
+| :--- | :--- | :--- | :--- |
+| **Test 1: Menu** | ARPU | **-9.1% Lift** | **Significant Decline** |
+| **Test 2: Novelty** | ARPU | **+5.57% Lift** | **Significant Increase** |
+| **Test 3: Product** | ARPU | **+20.97% Lift** | **Significant Increase** |
+| **Test 4: Reviews** | CR | **+0.53% Lift** | Not Significant |
+| **Test 5: Search** | ARPU | **0.00% Lift** | Not Significant |
+
+### Analysis of Sibling Experiments
+*   **Test 3 (Product Sliders)**: Observed the highest practical impact with a ~21% jump in ARPU. This suggests that layout optimizations should focus on content delivery (sliders) rather than structural navigation (vertical menu).
+*   **Test 2 (Novelty Slider)**: Shows that targeted UI "novelty" can drive monetization without hurting conversions.
+*   **Test 5 (Search Engine)**: Improvements to the underlying search logic were neutral, indicating that the current engine is likely not a primary bottleneck for user spending.
+
+---
+
+## 9. What the Data Shows (Insight Section)
 
 ### Behavioral Observations
 The Vertical layout appears to create a **friction point** in the monetization funnel. While the "purchase intent" (Conversion) is unaffected, the "basket value" (Revenue) is adversely impacted.
@@ -148,7 +168,7 @@ The ARPU decline is not just a statistical anomaly; a **-9.1% drop** represents 
 
 ---
 
-## 9. Business Impact Estimation
+## 10. Business Impact Estimation
 
 ### Expected KPI Decline
 *   Deploying the Vertical layout site-wide would expect to see a **~9% drop in total platform yield**.
@@ -158,7 +178,7 @@ The Vertical menu likely clutters the interface or buries high-margin items comp
 
 ---
 
-## 10. Final Executive Conclusion
+## 11. Final Executive Conclusion
 
 ### Decision Statement
 Based on the results of Test 1 (Menu), we **reject the transition to a Vertical Menu layout**.
