@@ -27,8 +27,6 @@ project/
 ├── result/
 │   ├── FINAL_AB_TEST_REPORT.pdf
 │   └── result.md
-├── data/
-├── output/
 └── README.md
 
 ```
