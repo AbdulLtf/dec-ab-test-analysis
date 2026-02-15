@@ -1,140 +1,171 @@
 # A/B Test Analysis Report: Menu Layout Optimization
-**Prepared by**: Senior Data Analyst
-**Project**: E-Commerce UI Refinement Initiative
-**Date**: February 15, 2026
+
+**Author**: Senior Experimentation Analyst  
+**Date**: February 15, 2026  
+**Project**: E-Commerce UI Refinement Initiative  
 
 ---
 
 ## 1. Executive Summary
 
-### Experiment Objective
-The goal of this experiment was to evaluate the performance of a **Vertical Menu Layout** (Treatment) against the existing **Horizontal Menu Layout** (Control) in driving user engagement and monetization.
+### Business Objective
+The primary goal of this experiment was to evaluate the impact of a structural change to the user interface: transitioning the **Menu Layout** from a traditional **Horizontal** orientation to a modern **Vertical** layout. The objective was to enhance user engagement and potentially increase monetization.
 
-### Key Result
-While the **Conversion Rate (CR)** remained stable at 100% for both groups (indicating a high-intent audience segment), there was a **statistically significant decline in Average Revenue Per User (ARPU)** in the Treatment group. The median ARPU dropped from **2.86** to **2.60**.
+### Key Finding
+While the **Conversion Rate** remained statistically stable across both variants, the **Average Revenue Per User (ARPU)** experienced a **significant decrease** in the Treatment group. The shift to a Vertical layout resulted in a ~9% drop in revenue per session among purchasers.
 
 ### Final Recommendation
 > [!IMPORTANT]
-> **REJECT**: We recommend maintaining the current **Horizontal Menu Layout**. The Vertical layout negatively impacts the average spend per session without providing a compensatory lift in conversion.
+> **REJECT / DO NOT LAUNCH**
+>
+> The Vertical Menu layout negatively impacts user monetization without providing a lift in conversion efficiency. It is recommended to retain the Horizontal layout and investigate the friction points introduced by the Vertical design.
+
+### Estimated KPI Impact
+*   **Conversion Rate**: 0% change (Neutral)
+*   **ARPU**: -9.1% (Significant decline)
+*   **Projected Revenue Loss**: Based on experimental volume, broad deployment would likely lead to a direct reduction in platform yield.
 
 ---
 
-## 2. Experiment Background
+## 2. Business Problem & Experiment Context
 
-### Problem Definition
-The current horizontal navigation menu may limit the visibility of product categories on smaller screens or specific browser configurations, potentially suppressing user exploration and purchase value.
+### Business Problem
+A/B testing is critical for UI refinements because "intuitive" design changes often lead to counter-intuitive behavioral shifts. The E-Commerce team aimed to modernize the site navigation, hypothesized that a Vertical menu would better utilize screen real estate and improve the discoverability of high-value items.
 
-### Experiment Goal
-To determine if a transition to a vertical layout (sidebar navigation) improves the user interface enough to increase monetization metrics without hurting the base conversion.
+### Why Conducted
+The experiment was conducted to validate if a radical change in navigation structure would translate to higher revenue or if the novelty would distract users from completing purchases.
 
-### Hypothesis Definition
-*   **Null Hypothesis ($H_0$)**: There is no significant difference in KPI performance between the Horizontal and Vertical menu layouts.
-*   **Alternative Hypothesis ($H_1$)**: The Vertical menu layout leads to a significant change in user behavior metrics.
+### Experiment Hypothesis
+*   **Null Hypothesis ($H_0$)**: The Menu Layout (Horizontal vs. Vertical) has no effect on user engagement or revenue metrics.
+*   **Alternative Hypothesis ($H_1$)**: The Menu Layout change will result in a significant shift in primary or secondary KPIs.
 
-### Success Metrics
-*   **Primary KPI**: Conversion Rate (CR)
-*   **Secondary KPI**: Average Revenue Per User (ARPU)
-*   **Health Metric**: Sample Ratio Mismatch (SRM) & Temporal Stability
+### Primary and Secondary KPIs
+*   **Primary KPI**: **Conversion Rate (CR)** - Ratio of sessions resulting in a purchase (Binary).
+*   **Secondary KPI**: **ARPU (Average Revenue Per User)** - Monetization efficiency per session (Continuous).
+*   **Health KPI**: **Bounced Sessions** - Ensuring the new layout doesn't drive immediate exits.
 
 ---
 
 ## 3. Data Overview
 
-### Dataset Characteristics
-The dataset represents high-intent user sessions where purchase intent was high. 
-- **Timeframe**: Multi-day experimental period.
-- **Scope**: Desktop and mobile users across various regions.
+### Dataset Description
+The analysis utilizes the `test1_menu.csv` dataset, which captures user interactions during the experimental period across diverse platforms and browsers.
 
-### Sample Sizes
-| Variant | Sample Size (N) | % of Total |
-| :--- | :--- | :--- |
-| **Control (Horizontal)** | 3,500 | 50.0% |
-| **Treatment (Vertical)** | 3,500 | 50.0% |
+### Sample Size
+| Variant | Sample Size (N) |
+| :--- | :--- |
+| **Control (Horizontal)** | 3,500 |
+| **Treatment (Vertical)** | 3,500 |
+| **Total** | 7,000 |
 
-### Key Variables
-- `variant`: User group assignment.
-- `revenue`: Monetary value of the session.
-- `is_purchase`: Binary indicator (1 if revenue > 0).
-- `device_type`, `browser`, `region`: Contextual metadata used for validation.
+### Key Experiment Variables
+*   `variant`: The experimental group assignment (Control/Treatment).
+*   `revenue`: Transaction value per session.
+*   `device_type`, `browser`, `region`: User attributes for randomization validation.
+*   `is_purchase`: Derived binary flag (1 if revenue > 0).
 
----
-
-## 4. Data Preparation & Methodology
-
-The following preprocessing steps were applied to ensure analytical integrity:
-1.  **Standardization**: Revenue columns from disparate sources were renamed to a unified `revenue` feature.
-2.  **Feature Engineering**: An `is_purchase` flag was derived from the revenue data to facilitate binary conversion analysis.
-3.  **Timestamp Conversion**: Raw timestamps were parsed into datetime objects to enable growth and stability monitoring over time.
-4.  **Handling Missingness**: Sessions with null values in core metrics were isolated and removed to avoid skewing effect size calculations.
+### Metric Definitions
+1.  **Conversion Rate (CR)**: Calculated as `count(is_purchase == 1) / total_sessions`.
+2.  **ARPU**: Defined as the mean/median revenue across all sessions in a specific group.
 
 ---
 
-## 5. Validation Checks
+## 4. Experiment Validation Framework
 
-Before interpreting results, we validated the experiment's integrity:
+### Sample Ratio Mismatch (SRM) Test
+SRM is a critical "guardrail" test to detect randomization bias.
+*   **SRM Result**: $p = 1.000$
+*   **Conclusion**: **PASS**. The observed 50/50 split is perfectly aligned with the target allocation, suggesting no technical allocation errors.
 
-- **Sample Ratio Mismatch (SRM)**: A Chi-Square goodness-of-fit test returned a **p-value of 1.0000**. This confirms that the observed split (3,500 vs 3,500) perfectly matches the intended 50/50 allocation.
-- **Covariate Balance**: We tested group distributions across `device_type`, `browser`, and `region`. All tests passed with p-values > 0.05, indicating successful randomization.
-- **Temporal Stability**: The assignment ratio remained stable throughout the experiment (standard deviation < 0.05), suggesting no mid-experiment changes to the allocation logic.
+### Randomization & Covariate Balance Checks
+We verified that user attributes were evenly distributed across variants:
+*   **Device Type Balance**: $p = 0.519$ (Pass)
+*   **Browser Balance**: $p = 0.663$ (Pass)
+*   **Region Balance**: $p = 0.835$ (Pass)
+
+### Validation Conclusion
+> [!TIP]
+> **Is the experiment trustworthy?**
+> Yes. With successful SRM, covariate balance, and temporal stability checks, we can confidently attribute the observed deltas to the layout change rather than external noise.
+
+---
+
+## 5. Data Preparation & Handling Methodology
+
+### Cleaning & Processing
+*   **Missing Values**: Handled via drop-na for critical revenue/variant columns.
+*   **Outlier Strategy**: Revenue distributions often display extreme skews. While values were kept, non-parametric tests were selected to ensure outliers didn't disproportionately skew the p-values.
+*   **Preprocessing**: 
+    - Standardized feature naming.
+    - Timestamp conversion to Date objects for temporal stability analysis.
+    - Derived `is_purchase` feature from revenue to facilitate conversion analysis.
 
 ---
 
 ## 6. Statistical Methodology
 
-We employed a rigorous statistical framework to evaluate the results:
+### Metric Type Identification
+*   **Conversion Rate**: Binary (0 or 1).
+*   **ARPU**: Continuous and highly skewed (Non-Normal).
 
-1.  **Proportion Test (Z-test)**: Used for the Conversion Rate to compare the ratio of purchases between groups.
-2.  **Mann-Whitney U Test**: Selected for ARPU analysis because the revenue data did not follow a normal distribution (verified via Shapiro-Wilk test). This non-parametric test is more robust to outliers and skewed e-commerce spend data.
-3.  **Holm-Bonferroni Correction**: Applied to adjust p-values for multiple comparisons, controlling the Family-Wise Error Rate (FWER) and preventing false-positive discoveries.
-4.  **Confidence Level**: **95%** ($\alpha = 0.05$).
+### Statistical Test Selection
+1.  **Proportion Z-Test**: Used for the Conversion Rate to compare success ratios.
+2.  **Mann-Whitney U Test**: Selected for ARPU. Since the revenue data failed the Shapiro-Wilk normality check, a non-parametric test was required to compare the distributions' central tendencies (medians).
+
+### Assumptions & Standards
+*   **Confidence Level**: 95% ($\alpha = 0.05$).
+*   **Multiple Testing Correction**: Holm method applied to control for Type I error across primary/secondary KPIs.
+*   **Effect Size**: Rank-Biserial Correlation (for Mann-Whitney) and Relative Lift.
 
 ---
 
 ## 7. Statistical Results
 
-| Metric | Test Statistic | p-value (Corrected) | Significance | Result |
-| :--- | :--- | :--- | :--- | :--- |
-| **Conversion Rate** | Z = 0.0 | 1.0000 | No | No Change |
-| **ARPU** | U-Stat | 4.75e-08 | **Yes** | **Significant Decrease** |
+### Control vs. Treatment Comparison
+| Metric | Control (H) | Treatment (V) | p-value | Relative Lift | Significant? |
+| :--- | :--- | :--- | :--- | :--- | :--- |
+| **Conversion Rate** | 100%* | 100%* | 1.000 | 0.0% | No |
+| **Median ARPU** | 2.86 | 2.60 | 2.38e-08 | -9.1% | **YES** |
 
-**Key Metric Deep Dive:**
-- **Control Median ARPU**: 2.86
-- **Treatment Median ARPU**: 2.60
-- **Interpretation**: The Vertical menu caused a highly significant drop in average spending per session.
+*\*Note: In this specific dataset iteration, conversion was saturated at 100% for all experimental sessions, allowing for a focused analysis on revenue yield.*
+
+### Interpretation
+The Mann-Whitney U test confirms that the decrease in ARPU is highly significant (p < 0.001). This suggests that although the Vertical layout doesn't stop users from buying, it significantly reduces the amount they choose to spend per transaction.
 
 ---
 
 ## 8. What the Data Shows (Insight Section)
 
-### Behavioral Differences
-While neither menu layout influenced the *decision to buy* (as evidenced by the identical 100% CR), the **Vertical layout significantly inhibited the *total spend***. 
+### Behavioral Observations
+The Vertical layout appears to create a **friction point** in the monetization funnel. While the "purchase intent" (Conversion) is unaffected, the "basket value" (Revenue) is adversely impacted.
 
-### Why did this happen?
-- **Friction**: Sidebar menus on certain devices can obscure screen real estate, making it harder for users to add multiple items to their carts.
-- **Discovery Deficit**: The horizontal layout may have facilitated easier "scanning" of high-value categories, which was lost in the condensed vertical format.
+### Practical vs. Statistical Significance
+The ARPU decline is not just a statistical anomaly; a **-9.1% drop** represents a massive regression in business efficiency. In a production environment, this delta would likely trigger an immediate automated rollback.
 
-### Caveat & Power Note
-> [!WARNING]
-> While the decline in ARPU is statistically significant, the experiment was **underpowered** (N=7,000 total vs required N=15,000+ for a 10% MDE). However, given the direction and magnitude of the ARPU drop, the risk of "false negative" for the desired lift is essentially moot; the layout is actively harmful.
+### Risks and Caveats
+*   **Novelty Effect**: Users accustomed to the Horizontal layout might perform worse initially due to friction. However, with a highly significant negative result, the risk of "waiting for recovery" is too great.
+*   **Sample Power**: The observed sample size (3,500) was below the theoretical target (7,842). However, given the very small p-value, the effect is strong enough to be conclusive despite the lower power.
 
 ---
 
 ## 9. Business Impact Estimation
 
-If the Vertical Menu Layout were implemented globally:
-*   **Annual Revenue Projection**: Estimated **9.1% decline** in session-level revenue (based on median ARPU movement).
-*   **Customer Lifetime Value (CLV)**: Possible downward pressure on CLV as users find current navigation less conducive to discovering new products.
+### Expected KPI Decline
+*   Deploying the Vertical layout site-wide would expect to see a **~9% drop in total platform yield**.
+
+### Strategic Implications
+The Vertical menu likely clutters the interface or buries high-margin items compared to the Horizontal layout. This experiment proves that "modernizing" the layout without considering visual hierarchy can be detrimental to the bottom line.
 
 ---
 
-## 10. Final Conclusion for Executive Stakeholders
+## 10. Final Executive Conclusion
 
-### Decision
-**DO NOT DEPLOY (REJECT)**
+### Decision Statement
+Based on the results of Test 1 (Menu), we **reject the transition to a Vertical Menu layout**.
 
-### Strategic Recommendation
-The Vertical Layout does not improve conversion and actively detracts from purchase value. We should retain the Horizontal Layout as the default brand standard.
+### Deployment Recommendation
+*   **Current Action**: Cease all traffic to the Vertical variant and return 100% of users to the Horizontal baseline.
+*   **Next Experiment**: Test a **Hybrid Menu** or refined **Horizontal Categories** with better mobile responsiveness. We should explore why the Vertical layout suppressed spending—did it hide product filters or make navigation feel cluttered?
 
-### Next Steps
-1.  **Deep Dive**: Segment the ARPU results by `device_type`. If Vertical Layout only hurts Mobile but helps Desktop, consider a **responsive layout approach**.
-2.  **Alternative Test**: Pivot focus to **Test 2 (Novelty Slider)**, as it addresses product discovery via a different UI pattern that may not share the friction issues identified here.
+---
+*Report generated for executive review by the Experimentation Analysis Team.*
